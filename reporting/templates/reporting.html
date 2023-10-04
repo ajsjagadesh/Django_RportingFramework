@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
+    
+    <title>Home</title>
+    <!-- For Menu -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'menu_style.css' %}">
+    <script type="text/javascript" charset="utf8" src="{% static 'bootstrap.bundle.js' %}"></script>
+    <!-- for menu -->
+
+    <style>
+        #main{
+            padding-left: 18%;
+            padding-top: 50px;
+        }
+        #report_name{
+            margin-bottom: 50px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            /* display: flex; */
+            /* justify-content: space-between; */
+            align-items: center;
+        }
+        .form-group label
+        {
+            display: inline-block; /* Add this property */
+            width: 20%;
+            
+        }
+        .form-group input {
+            width: 20%; /*Adjust the width as needed*/
+             
+        }
+        input[type="text"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="text"]:hover {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #5b5b5b;
+            border-radius: 5px;
+            outline: none;
+            box-shadow: 0px 0px 2px 2px rgba(76, 246, 121, 0.2);
+        }
+
+        input[type="submit"] {
+            background-color: #2a832d; /* Green background color for the button */
+            color: white; /* White text color for the button */
+            border: none;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #026505; /* Green background color for the button */
+            color: white; /* White text color for the button */
+            border: none;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            box-shadow: 0px 0px 4px 4px rgba(82, 255, 148, 0.2);
+        }
+
+        input[type="checkbox"] {
+            background-color: #4CAF50; /* Green background color for the button */
+            color: white; /* White text color for the button */
+            border: solid;
+            height: 20px;
+            width: 2%;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+
+        }
+
+        input[type="number"]{
+            border-radius: 5px;
+            border-width: 1px ;
+            height: 40px;
+            border-color: #ccc;
+        }
+
+        #select{
+            width: 20%;
+            height: 30px;
+            margin-top: 20px ;
+            border-radius: 5px;
+            border-color: #ccc;
+        }
+
+        #select:hover{
+            width: 20%;
+            height: 30px;
+            margin-top: 20px ;
+            border-radius: 5px;
+            border-color: #ccc;
+            box-shadow: 0px 0px 4px 4px rgba(82, 255, 148, 0.2);
+        }
+        /* .form-group :nth-child(odd)
+        {
+            background-color: rgb(187, 187, 187);
+        } */
+    </style>
+
+
+</head>
+<body>
+    {% include "menu.html" %}
+    <div id="main">
+        <div id = "report_name">
+            <h1>{{report_name}}</h1>
+        </div>
+        
+        <form id="trackingForm" action="/reporting/data" method="POST">
+            {% csrf_token %}
+            {% for item in input %}
+                {% if item.type != "options"  %}
+                    <div class="form-group">
+                        <label for="{{ item.name }}">{{ item.label }}</label>
+                        <input type="{{ item.type }}" id="{{ item.name }}" name="{{ item.name }}" placeholder="Enter {{ item.label }}" {% if item.min %}min="{{item.min}}"{% endif %}   {% if item.max %} max="{{item.max}}" {% endif %}      {% if item.required %}required{% endif %}>
+                    </div>
+                {% else %}
+                    <div class="form-group" >
+                        <label for="{{ item.name }}">{{ item.label }}</label>
+                        <select name="{{ item.name }}" id="select">
+                        {% for i in item.options %}
+                            <option>{{i}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </form>
+    
+    </div>
+    
+</body>
+</html>
+
+

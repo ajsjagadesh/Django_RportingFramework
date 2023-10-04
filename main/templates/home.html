@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
+    
+    <title>Home</title>
+    <!-- For Menu -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'menu_style.css' %}">
+    <script type="text/javascript" charset="utf8" src="{% static 'bootstrap.bundle.js' %}"></script>
+    <!-- for menu -->
+
+    <style>
+        #main{
+            padding-left: 18%;
+            padding-top: 50px;
+        }
+    </style>
+
+</head>
+<body>
+    {% include "menu.html" %}
+    <div id="main">
+        <div id = "head">
+            <h1>Oop'S NothinG at HomE PagE BecausE we are StilL DesigninG</h1>
+        </div>
+    </div>
+</body>
+</html>
+
+

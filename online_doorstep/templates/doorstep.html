@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
+    <title>Online Doorstep</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dataTables.bootstrap5.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+
+    <!-- For Menu -->
+    <script type="text/javascript" charset="utf8" src="{% static 'bootstrap.bundle.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'menu_style.css' %}">
+    <!-- for menu -->
+
+    <script type="text/javascript" src="{% static 'jquery-3.7.0.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dataTables.bootstrap5.min.js' %}"></script>
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'buttons.dataTables.min.css' %}">
+    <!-- DataTables Buttons JS -->
+    <script type="text/javascript" charset="utf8" src="{% static 'dataTables.buttons.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'jszip.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'pdfmake.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'buttons.html5.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'xlsx.full.min.js'%}"></script>
+    
+
+    <style>
+        /* CSS for the table */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: 2px solid #333;
+          margin-bottom: 20px;
+        }
+      
+        th, td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+      
+        th {
+          background-color: rgb(105, 105, 105);
+          color: white;
+          cursor: pointer;
+        }
+      
+        /* CSS for alternating row colors */
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+      
+        /* CSS for hover effect */
+        tr:hover {
+          background-color: #ddd;
+        }
+      </style>
+</head>
+<body>
+    {% include "menu.html" %}
+    <div class="container mt-5 mb-5" style="padding-top: 0; padding-left: 5%;">
+        <h2 style="padding-bottom: 10px;">Online Doorstep</h2>
+
+        <div style="margin-bottom: 40px;" >
+            <table>
+                <tr>
+                  <th>Traking Id</th>
+                  <th>Order Id</th>
+                  <th>Order Item Unit Id</th>
+                  <th>Grade</th>
+                </tr>
+                <tr>
+                  <td>{{ traking_id | safe}}</td>
+                  <td>{{ order_id | safe}}</td>
+                  <td>{{ order_item_unit_id | safe}}</td>
+                  <td>{{ grade | safe}}</td>
+                </tr>
+            </table>  
+        </div>
+        <table class="table table-striped" id="userTable">
+            <thead>
+                <th>Question ID</th>
+                <th>Description</th>
+                <th>FE Answers</th>
+                <th>TL Answers</th>
+            </thead>
+            <tbody id="tbody">
+                
+            </tbody>
+        </table>
+    </div>
+
+<script>
+        const jsonData = {{ data | safe }};
+        // const order = {{ order_id | safe}};
+        
+        // Render the data in the table with FE data first and TL data second
+        const tbody = document.getElementById('tbody');
+        jsonData.forEach(data => {
+            const row = `<tr>
+                            <td>${data.question_id}</td>
+                            <td>${data.description}</td>
+                            <td>${data.fe_ans}</td>
+                            <td>${data.tl_ans}</td>
+                        </tr>`;
+            tbody.innerHTML += row;
+        });
+    
+        // Initialize DataTable
+        const userTable = $("#userTable").DataTable({
+            data: jsonData,
+            columns: [
+                { data: "question_id" },
+                { data: "description" },
+                { data: "fe_ans" },
+                { data: "tl_ans" }
+            ],
+            dom: 'Bfrtip', // Display export buttons
+            pageLength: 13, // Set the number of rows per page
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'csvHtml5',
+                    title: '{{ order_id | safe }}', // Add a title for the exported file
+                    customize: function (csv) {
+                        // Add the tracking ID, order ID, and order item unit ID to the CSV data
+                        const trackingId = "{{ traking_id | safe }}";
+                        const orderId = "{{ order_id | safe }}";
+                        const orderItemUnitId = "{{ order_item_unit_id | safe }}";
+                        const grade = "{{ grade | safe }}"
+                        csv = `Tracking ID,Order ID,Order Item Unit,Grade ID\n${trackingId},${orderId},${orderItemUnitId},${grade}\n${csv}`;
+                        return csv;
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    title: '{{ order_id | safe }}', // Add a title for the exported file
+                    customize: function (doc) {
+                        // Add the tracking ID, order ID, and order item unit ID to the PDF content
+                        const trackingId = "{{ traking_id | safe }}";
+                        const orderId = "{{ order_id | safe }}";
+                        const orderItemUnitId = "{{ order_item_unit_id | safe }}";
+                        const garde = '{{ grade | safe }}';
+                        const content = `
+                                Tracking ID: ${trackingId}
+                                Order ID: ${orderId}
+                                Order Item Unit ID: ${orderItemUnitId}
+                                Grade : ${garde}`;
+                        doc.content.splice(1, 0, content);
+                    }
+                },
+                {
+                extend: 'excelHtml5',
+                title: '{{ order_id | safe }}', // Add a title for the exported file
+                customize: function (xlsx) {
+                    // Create a worksheet
+                    const sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                    // Add the tracking ID, order ID, and order item unit ID to the Excel sheet
+                    const trackingId = "{{ traking_id | safe }}";
+                    const orderId = "{{ order_id | safe }}";
+                    const orderItemUnitId = "{{ order_item_unit_id | safe }}";
+                    const grade = "{{ grade | safe }}";
+
+                    // Find an empty row to insert the data
+                    let row = sheet.getElementsByTagName('row')[1];
+                    let cell = document.createElement('c');
+                    cell.setAttribute('t', 'inlineStr');
+                    cell.setAttribute('s', '2');
+                    let is = document.createElement('is');
+                    let t = document.createElement('t');
+                    t.innerText = `${trackingId},${orderId},${orderItemUnitId},${grade}`;
+                    is.appendChild(t);
+                    cell.appendChild(is);
+                    row.appendChild(cell);
+                }
+            }
+            ]
+        });
+    </script> 
+<!-- 
+<script>
+    // JavaScript for table sorting
+    const table = document.querySelector('table');
+    const ths = table.querySelectorAll('th[data-sortable="true"]');
+    const tbody = table.querySelector('tbody');
+  
+    ths.forEach(th => {
+      th.addEventListener('click', () => {
+        const direction = th.dataset.sortDirection || 'asc';
+  
+        // Reset direction on all headers
+        ths.forEach(header => header.removeAttribute('data-sort-direction'));
+  
+        // Set direction on the clicked header
+        th.setAttribute('data-sort-direction', direction);
+  
+        const colIndex = Array.from(ths).indexOf(th);
+        const comparator = (a, b) => {
+          const aValue = a.cells[colIndex].textContent.trim();
+          const bValue = b.cells[colIndex].textContent.trim();
+          if (direction === 'asc') {
+            return aValue.localeCompare(bValue);
+          } else {
+            return bValue.localeCompare(aValue);
+          }
+        };
+  
+        const sortedRows = Array.from(tbody.rows)
+          .slice(1)
+          .sort(comparator);
+  
+        // Clear the table body
+        while (tbody.firstChild) {
+          tbody.removeChild(tbody.firstChild);
+        }
+  
+        // Append the sorted rows
+        sortedRows.forEach(row => tbody.appendChild(row));
+      });
+    });
+  </script>
+   -->
+    
+</body>
+</html>
