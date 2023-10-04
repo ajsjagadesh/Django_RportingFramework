@@ -1,3 +1,5 @@
+--trusted-host jfrog.fkinternal.com
+-i http://jfrog.fkinternal.com/artifactory/api/pypi/python_virtual/simple
 asgiref==3.7.2
 certifi==2023.7.22
 charset-normalizer==3.2.0
