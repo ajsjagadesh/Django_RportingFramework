@@ -28,6 +28,8 @@
     <script type="text/javascript" charset="utf8" src="{% static 'vfs_fonts.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'buttons.html5.min.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'xlsx.full.min.js'%}"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     
 
     <style>
@@ -49,6 +51,7 @@
           padding: 10px;
           text-align: left;
           border-bottom: 1px solid #ddd;
+          border-right: 1px solid #ddd; /* Add border on the right side */
         }
       
         th {
@@ -70,7 +73,7 @@
 </head>
 <body>
     {% include "menu.html" %}
-    <div class="container mt-5 mb-5" style="padding-top: 0; padding-left: 5%;">
+    <div class="container mt-5 mb-5" style="padding-top: 0; padding-left: 200px;">
         <h2 style="padding-bottom: 10px;">Online Doorstep</h2>
 
         <div style="margin-bottom: 40px;" >

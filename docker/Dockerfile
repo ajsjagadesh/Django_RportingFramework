@@ -14,6 +14,12 @@ RUN useradd -g 9876 -u 4546 fk-vrp-001
 # Installing Python and pip
 RUN apt-get update
 RUN apt-get install -y python3.9 && apt-get install -y python3-pip
+RUN apt-get install -y build-essential gcc 
+# default-libmysqlclient-dev
+# libxslt-dev python-dev \default-libmysqlclient-dev libsasl2-dev  libssl-dev  vim
+# RUN apt install -y libmariadb-dev-compat  && apt install -y libmariadb-dev
+# RUN export MYSQLCLIENT_CFLAGS="-I/usr/include/mysql"
+# RUN export MYSQLCLIENT_LDFLAGS="-L/usr/lib/x86_64-linux-gnu -lmysqlclient"
 
 
 # Set the working directory

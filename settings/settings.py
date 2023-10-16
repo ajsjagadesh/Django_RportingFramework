@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-xpr^p-d)iou)bo7inaji#iey#omj8^+dc%+-m5w5e%_8+_p9vz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'reporting',
     'main',
     'online_doorstep',
-    'reporting'
 ]
 
 MIDDLEWARE = [
@@ -77,12 +77,29 @@ WSGI_APPLICATION = 'vrp_001.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'test01',     # Replace with your database name
+        'USER': 'root',    # Replace with your MySQL username
+        'PASSWORD': '',  # Replace with your MySQL password
+        'HOST': 'host.docker.internal',             # Replace with the MySQL host (e.g., 'localhost' for local development)
+        #'HOST': 'localhost',    
+        'PORT': '3306',                  # Replace with the MySQL port (default is 3306)
+        'OPTIONS': {
+            'autocommit': True,  # This option is necessary for certain MySQL configurations
+        },
     }
 }
+
 
 
 # Password validation

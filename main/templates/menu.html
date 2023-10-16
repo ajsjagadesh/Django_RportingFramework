@@ -1,39 +1,86 @@
-<div id="body">
+{% load static %}
+ <div id="body">
     <div class="logo" id="logo">
-        <a href="http://0.0.0.0:9090/">VRP_007</a>
+        <a href="{% url 'main:home' %}" style="padding-left: 55px;"><img src="{% static 'logo2.png' %}" alt="zoro logo"  style="width:120px;height:35px;"></a>
     </div>
 
     <div class="menu" id="menu">
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn" id="dbtn">Online Doorstep</button>
-            <div id="myDropdown" class="dropdown-content">
-                <a href="{% url 'online_doorstep:online_doorstep' %}">main</a>
-                <a href="{% url 'reporting:reporting' %}">Reporting_test</a>
-                <a href="#">Link 3</a>
+            <button onclick="toggleDropdown('myDropdown1', 'arrow1')" class="dropbtn" id="dbtn">
+                &#x2632; Online Doorstep
+                <span id="arrow1" class="arrow" style="font-size: 15px;">&#8249;</span>
+            </button>
+            <div id="myDropdown1" class="dropdown-content">
+                <a href="{% url 'online_doorstep:online_doorstep' %}">&#9870; Main</a>
+                <a href="{% url 'online_doorstep:imei_form' %}">&#9870; Check with IMEI</a>
             </div>
         </div>
+
+        <div class="dropdown">
+            <button onclick="toggleDropdown('myDropdown2', 'arrow2')" class="dropbtn" id="dbtn">
+                &#9923; Reporting
+                <span id="arrow2" class="arrow" style="font-size: 15px;">&#8249;</span>
+            </button>
+            <div id="myDropdown2" class="dropdown-content">
+                <a href="{% url 'reporting:report_home' %}">&#9870; Reports</a>
+                <a href="#">&#9870; Reports_Authn</a>
+            </div>
+        </div>
+
+        <footer>
+            <div  class="dropdown" style="width:250px">
+                <div class="block">
+                    <button onclick="toggleUserDropdown('userDropdown')" class="user-dropbtn">
+                        <span class="material-symbols-outlined" style="font-size: 22px;">person</span> <!-- Add your user icon here -->
+                        <span class="user-name">ajagadish.nayak</span> <!-- Add your user name here -->
+                    </button>
+                    <div id="userDropdown" class="user-dropdown-content" style="width:250px; padding-left: 10px;">
+                        <a href="#" style="padding-left: 25px;"><span class="material-symbols-outlined" style="font-size: 18px;">person</span> <span class="Profile" style="padding-left: 8px; padding-top: 3px;"> Profile</span></a>
+                        <a href="#" style="padding-left: 25px;"><span class="material-symbols-outlined" style="font-size: 18px;">logout</span> <span class="logout" style="padding-left: 8px; padding-top: 3px;"> Logout</span></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
+   
 </div>
 
 
 <script>
-    /* When the user clicks on the button,
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
+    function toggleDropdown(dropdownId, arrowId) {
+        var dropdown = document.getElementById(dropdownId);
+        var arrow = document.getElementById(arrowId);
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+            arrow.classList.remove("rotate");
+        } else {
+            dropdown.style.display = "block";
+            arrow.classList.add("rotate");
+        }
     }
 
-    // Close the dropdown menu if the user clicks outside of it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (!event.target.matches('.dropbtn')) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
+            var arrows = document.getElementsByClassName("arrow");
+            for (var i = 0; i < dropdowns.length; i++) {
                 var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
+                var arrow = arrows[i];
+                if (openDropdown.style.display === "block") {
+                    openDropdown.style.display = "none";
+                    arrow.classList.remove("rotate");
                 }
             }
+        }
+    }
+</script>
+<script>
+    function toggleUserDropdown(dropdownId) {
+        var dropdown = document.getElementById(dropdownId);
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+        } else {
+            dropdown.style.display = "block";
         }
     }
 </script>

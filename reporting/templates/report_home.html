@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
+    
+    <title>Home</title>
+    <!-- For Menu -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'menu_style.css' %}">
+    <script type="text/javascript" charset="utf8" src="{% static 'bootstrap.bundle.js' %}"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <!-- for menu -->
+
+    <style>
+        #main{
+            padding-left: 300px;
+            padding-top: 50px;
+        }
+        #report_name{
+            margin-bottom: 50px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            /* display: flex; */
+            /* justify-content: space-between; */
+            align-items: center;
+        }
+        .form-group label
+        {
+            display: inline-block; /* Add this property */
+            width: 20%;
+            
+        }
+
+        #select{
+            width: 500px;
+            height: 30px;
+            margin-top: 20px ;
+            border-radius: 5px;
+            border-color: #ccc;
+        }
+
+        #select:hover{
+            width: 500px;
+            height: 30px;
+            margin-top: 20px ;
+            border-radius: 5px;
+            border-color: #ccc;
+            box-shadow: 0px 0px 4px 4px rgba(82, 255, 148, 0.2);
+        }
+        /* .form-group :nth-child(odd)
+        {
+            background-color: rgb(187, 187, 187);
+        } */
+    </style>
+
+
+</head>
+<body>
+    {% include "menu.html" %}
+    <div id="main">
+        <div id = "report_name">
+            <h1>Report's</h1>
+        </div>
+        
+        <form id="trackingForm" action="{% url 'reporting:reporting' %}" method="POST">
+            {% csrf_token %}
+           
+                    <div class="form-group" >
+                        <label for="report_list">Reports_List : </label>
+                        <select name="report_name" id="select">
+                            {% for item in report_name %}
+                            <option>{{item}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" id="submit" name="submit">
+                    </div>
+        </form>
+    
+    </div>
+    
+</body>
+</html>
+
+

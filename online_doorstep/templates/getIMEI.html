@@ -17,7 +17,7 @@
 
     <style>
         #main{
-            padding-left: 300px;
+            padding-left: 18%;
             padding-top: 50px;
         }
         #report_name{
@@ -137,7 +137,7 @@
             <h1>{{report_name}}</h1>
         </div>
         
-        <form id="trackingForm" action="{% url 'reporting:formdata' %}" method="POST">
+        <form id="trackingForm" action="{% url 'online_doorstep:imei' %}" method="POST">
             {% csrf_token %}
             {% for item in input %}
                 {% if item.type != "options"  %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from requests import get, post
 import settings.settings_dev as s
 import json
@@ -67,7 +67,89 @@ def doorstep(req):
     else:
         context = {}
     return render(req, "doorstep.html", context)
+
+
+def get_imei(req):
+    context = { 
+                "input": [
+                    { "label": "IMEI", "name": "imei", "type":"text", "required" : "required" },
+                    # { "label": "Age", "name" : "age", "type":"text" },
+                    # { "label": "Mobile Number", "name": "traking_id", "type":"text" },
+                    # { "label": "Roll Number", "name": "rollnumber", "type":"checkbox" },
+                    # { "label" : "Space", "name":"space", "type":"number", "min":10, "max":999  },
+                    # { "label" : "Select paymant mode", "name": "pay_mode", "type" : "options", "options":["Credit-Card", "Debit-Card", "UPI"]},
+                    { "name":"submit","type":"submit"  }
+                ],
+                "report_name" :  "IMEI Details"
+
+            }
+    return render(req, "getIMEI.html", context)
+
+
+def imei(req):
+    print("*************************#####*********************************")
+    resp = {}
+    for key, value in req.POST.items():
+        resp[key] = value
+    # print(resp)
+    context = {   
+            "url" : "https://fkdapi.gadgetwood.com/API/flipkart/GetAssessmentByImei",
+            "http_method" : "POST",
+            "http_headers" : {
+                "Accept":"application/json",
+                "Authorization":"Bearer TtgnNAthucvK-jCX_zEQ2wpFbeTxda9KbyKw-8Biki4SJ8DjgglmZs3qhsy3ChgL5AhIl7XxKWMSf6wsxrrlRwPijI75ieWF5hUGrQYjMmaBz7qJMem0ltcjQpR3iNFrSSH7sVWzGh0M1CUWoltu5bQNo6Zri-ODbKJyCii0-801JcC-pV6LgkDhA5DvYii87UIEpn7QsuMH4mCXMWnJ2E68r7DwNQkVFt-OByR0mb0",
+                "Content-Type":"application/json"
+            },
+            "request_body": {
+                "Imei":'{imei}'
+            }
+    }
+
+    data = format_data(context, resp)
+    resp = post(url=data['url'], headers=data['http_headers'], json=data['request_body'], verify=False)
+
+    # response = HttpResponse(f"<h1>{resp.text}</h1>", content_type="text/html")
+    # print(resp.json()[0])
+    # print("******************************************************************************")
+    if resp.status_code >= 200 and resp.status_code<300:
+        data = resp.json()[0]
+        return render(req, "imei.html", data)
+    context = error(resp)
+    return render(req, "table.html", context)
+
+    # data = resp.json()[0]
+    # return render(req, "imei.html", data)
+
+
+def format_data(context, resp):
+    if "url" in context:
+        # Format the URL with data
+        context['url'] = context['url'].format(**resp)
     
+    if "http_headers" in context:
+        context['http_headers'] = {key: value.format(**resp) if isinstance(value, str) else value for key, value in context['http_headers'].items()}
+    
+    if 'request_body' in context:
+        context['request_body'] = {key: value.format(**resp) if isinstance(value, str) else value for key, value in context['request_body'].items()}
+    return context
+
+
+def error(resp):
+    heading = ["Message", "Status_Code"]
+    keys = ["Message", "Status_Code"]
+    mesg = [{
+        "Message": str(resp.json()),
+        "Status_Code": str(resp.status_code)
+        }]
+    context = {
+        "Headings" : heading,
+        "keys" : keys,
+        "row_data" : mesg
+    }
+    print(heading)  
+    print(keys)
+    print(mesg)
+    return context
     
 
 

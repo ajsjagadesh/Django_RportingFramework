@@ -6,5 +6,7 @@ app_name = 'reporting'  # Namespace for the app
 
 urlpatterns = [
     path('', report, name='reporting'),
-    path('data', form_input, name='formdata')
+    path('data', report_procces, name='formdata'),
+    path('reports', report_home, name="report_home"),
+    path('download', download, name="download_file")
 ]

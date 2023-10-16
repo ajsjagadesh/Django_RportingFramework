@@ -1,0 +1,149 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
+    <title>Online Doorstep</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dataTables.bootstrap5.min.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+
+    <!-- For Menu -->
+    <script type="text/javascript" charset="utf8" src="{% static 'bootstrap.bundle.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'all.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'menu_style.css' %}">
+    <!-- for menu -->
+
+    <script type="text/javascript" src="{% static 'jquery-3.7.0.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dataTables.bootstrap5.min.js' %}"></script>
+    <!-- DataTables Buttons CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'buttons.dataTables.min.css' %}">
+    <!-- DataTables Buttons JS -->
+    <script type="text/javascript" charset="utf8" src="{% static 'dataTables.buttons.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'jszip.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'pdfmake.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'vfs_fonts.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'buttons.html5.min.js' %}"></script>
+    <script type="text/javascript" charset="utf8" src="{% static 'xlsx.full.min.js'%}"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <!-- Your other CSS and JS files -->
+
+    <style>
+        /* CSS for the table */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          border-spacing: 0;
+          border: 2px solid #333;
+          margin-bottom: 20px;
+        }
+      
+        th, td {
+          padding: 10px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+          border-right: 1px solid #ddd; /* Add border on the right side */
+        }
+      
+        th {
+          background-color: rgb(105, 105, 105);
+          color: white;
+          cursor: pointer;
+        }
+      
+        /* CSS for alternating row colors */
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+      
+        /* CSS for hover effect */
+        tr:hover {
+          background-color: #ddd;
+        }
+      </style>
+    <!-- ... -->
+</head>
+<body>
+    {% include "menu.html" %}
+    <div style="padding-top: 100px; padding-left: 300px; padding-right:20px ;">
+        <h1>{{Report_name}}</h1>
+
+        {% if file == "True" %}
+            <p>Below table will show only 2000 rows of data but your respons has {{data_len}} rows of data <br>To see all data you can download this report by clicking below link</p>
+            <a href="{% url 'reporting:download_file' %}" style="color: black; font-size: 1em;">Download full data</a>
+            <p>Total Number of row is : {{data_len}}</p>
+        {% endif %}
+
+        <table class="table table-striped" id="dataTable" style=" display: block;
+        overflow-x: auto;">
+            <thead>
+                {% for heading in Headings %}
+                    <th>{{ heading }}</th>
+                {% endfor %}
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>                    
+        </table>
+    </div>
+    
+
+    <script>
+        $(document).ready(function() {
+            const table = $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                pageLength: 13,
+                buttons: [
+                    'copyHtml5',
+                    {
+                        extend: 'csvHtml5',
+                        title: 'report', // Change this to your desired export file name
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'report', // Change this to your desired export file name
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'report', // Change this to your desired export file name
+                    }
+                ]
+            });
+        });
+    </script>
+    <script>
+        const jsonData = {{ row_data | safe }};
+        const key = {{ keys | safe }};
+        const tbody = document.getElementById('tbody');
+
+        jsonData.forEach(data => {
+            let row = '<tr>';
+            for (const k of key) {
+                row += `<td>${data[k]}</td>`;
+            }
+            row += '</tr>';
+            tbody.innerHTML += row;
+        });
+    
+        // Initialize DataTable
+        const dataTable = $("#dataTable").DataTable({
+            data: jsonData,
+            columns: keys.map(key => ({ data: key })), // Create columns for each key
+            dom: 'Bfrtip' // Display export buttons
+        });
+    </script> 
+
+
+</body>
+</html>

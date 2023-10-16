@@ -6,6 +6,8 @@ charset-normalizer==3.2.0
 Django==4.2.5
 django-opentracing==1.1.0
 djangorestframework==3.14.0
+django-debug-toolbar==4.2.0
+django-cors-headers==4.2.0
 idna==3.4
 opentracing==2.4.0
 pytz==2023.3.post1
@@ -15,3 +17,6 @@ sqlparse==0.4.4
 typing_extensions==4.8.0
 urllib3==2.0.5
 whitenoise==6.5.0
+mysqlclient
+pymysql==1.1.0
+pandas==2.1.1
